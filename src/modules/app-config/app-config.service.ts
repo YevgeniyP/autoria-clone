@@ -32,4 +32,8 @@ export class AppConfigService {
   get jwtSecret(): string {
     return this.configService.get('JWT_SECRET');
   }
+
+  get jwtTtl(): string {
+    return this.configService.get('JWT_TTL');
+  }
 }

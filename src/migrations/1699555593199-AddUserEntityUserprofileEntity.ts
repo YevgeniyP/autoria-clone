@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddUserEntityUserprofileEntity1699522807165
+export class AddUserEntityUserprofileEntity1699555593199
   implements MigrationInterface
 {
-  name = 'AddUserEntityUserprofileEntity1699522807165';
+  name = 'AddUserEntityUserprofileEntity1699555593199';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(

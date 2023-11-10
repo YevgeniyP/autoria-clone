@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { UserEntity } from '../../app-repository/entities/user.entity';
 import { UserRepository } from '../../app-repository/repositories/user.repository';
+import { AccountListQueryDto } from '../dto/request/account-list-query.dto';
 import { LoginUserDto } from '../dto/request/login-user.dto';
 import { RegisterUserDto } from '../dto/request/register-user.dto';
 import { PasswordService } from './password.service';
@@ -14,17 +15,7 @@ export class AuthService {
   ) {}
 
   public async register(dto: RegisterUserDto): Promise<UserEntity> {
-    const { username, email, password } = dto;
-    if (await this.checkEmailExisting(email)) {
-      throw new BadRequestException('Email already exists');
-    }
-    if (await this.checkUsernameExisting(username)) {
-      throw new BadRequestException('Username already exists');
-    }
-    const user = this.userRepository.create(dto);
-    user.password = await this.passwordService.hashPassword(password);
-    await this.userRepository.save(user);
-    return user;
+    return await this.userRepository.createUserWithProfile(dto);
   }
 
   public async login(dto: LoginUserDto): Promise<UserEntity> {
@@ -36,6 +27,9 @@ export class AuthService {
     if (!(await this.passwordService.verifyPassword(password, user.password))) {
       throw new BadRequestException('Email or password is incorrect');
     }
+    if (user.isBanned) {
+      throw new BadRequestException('User is banned');
+    }
     return user;
   }
 
@@ -44,6 +38,38 @@ export class AuthService {
       where: { id },
       relations: { profile: true },
     });
+  }
+
+  public async findWithQuery(
+    query: AccountListQueryDto,
+  ): Promise<UserEntity[]> {
+    return await this.userRepository.findWithQuery(query);
+  }
+
+  public async banAccount(id: string): Promise<UserEntity> {
+    const user = await this.findUserById(id);
+    if (user.isBanned) {
+      throw new BadRequestException('User is already banned');
+    }
+    user.isBanned = true;
+    return await this.userRepository.save(user);
+  }
+
+  public async unbanAccount(id: string): Promise<UserEntity> {
+    const user = await this.findUserById(id);
+    if (!user.isBanned) {
+      throw new BadRequestException('User is already unbanned');
+    }
+    user.isBanned = false;
+    return await this.userRepository.save(user);
+  }
+
+  public async findUserById(id: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    return user;
   }
 
   public async checkEmailExisting(email: string): Promise<boolean> {

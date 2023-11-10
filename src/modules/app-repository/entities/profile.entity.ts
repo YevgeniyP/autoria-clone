@@ -14,8 +14,8 @@ export class ProfileEntity {
   id: string;
 
   @OneToOne(() => UserEntity, (user) => user.profile)
-  @JoinColumn({ name: 'userId' })
-  userId: UserEntity;
+  @JoinColumn()
+  user: UserEntity;
 
   @Column({ type: 'varchar', length: 50, default: '' })
   name: string;

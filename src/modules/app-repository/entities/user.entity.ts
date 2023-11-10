@@ -31,6 +31,6 @@ export class UserEntity {
   @Column({ type: 'boolean', default: false })
   isBanned: boolean;
 
-  @OneToOne(() => ProfileEntity, (userprofile) => userprofile.userId)
+  @OneToOne(() => ProfileEntity, (userprofile) => userprofile.user)
   profile: ProfileEntity;
 }

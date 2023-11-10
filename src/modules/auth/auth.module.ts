@@ -16,7 +16,7 @@ import { TokenService } from './services/token.service';
       useFactory: (appConfigService: AppConfigService) => ({
         secret: appConfigService.jwtSecret || 'secret',
         signOptions: {
-          expiresIn: '24h',
+          expiresIn: appConfigService.jwtTtl || '12h',
         },
       }),
       inject: [AppConfigService],
@@ -24,5 +24,6 @@ import { TokenService } from './services/token.service';
   ],
   controllers: [AuthController],
   providers: [AuthService, PasswordService, TokenService, JwtStrategy],
+  exports: [PasswordService],
 })
 export class AuthModule {}

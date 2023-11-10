@@ -14,7 +14,7 @@ export class RegisterUserDto {
   @IsString()
   @IsNotEmpty()
   @Length(5, 25)
-  username: string;
+  readonly username: string;
 
   @ApiProperty({
     description: 'User email',
@@ -25,7 +25,7 @@ export class RegisterUserDto {
   @IsString()
   @IsNotEmpty()
   @IsEmail()
-  email: string;
+  readonly email: string;
 
   @ApiProperty({
     description: 'User password',
@@ -36,5 +36,5 @@ export class RegisterUserDto {
   @Transform(({ value }) => value.trim())
   @IsString()
   @IsNotEmpty()
-  password: string;
+  readonly password: string;
 }
