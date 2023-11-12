@@ -3,21 +3,21 @@ import {
   Controller,
   Get,
   Param,
-  Patch,
   Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { CurrentUser } from '../../decorators/current-user.decorator';
-import { Role } from '../../decorators/role.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Role } from '../../common/decorators/role.decorator';
 import { AuthResponseMapper } from './auth-response.mapper';
 import { AccountListQueryDto } from './dto/request/account-list-query.dto';
 import { LoginUserDto } from './dto/request/login-user.dto';
 import { RegisterUserDto } from './dto/request/register-user.dto';
 import { BaseUserAccountDto } from './dto/response/base-user-account.dto';
 import { BaseUserAccountWithTokenDto } from './dto/response/base-user-account-with-token.dto';
+import { BaseUserListResponseDto } from './dto/response/base-user-list-response.dto';
 import { FullUserAccountDto } from './dto/response/full-user-account.dto';
 import { RoleEnum } from './enum/role.enum';
 import { JwtGuard } from './guards/jwt.guard';
@@ -53,7 +53,7 @@ export class AuthController {
     return AuthResponseMapper.toBaseResponseWithToken(user, token);
   }
 
-  @ApiTags('Account management')
+  @ApiTags('Auth')
   @ApiOperation({ summary: 'Get current user' })
   @Get('me')
   @Role(RoleEnum.SELLER, RoleEnum.MANAGER, RoleEnum.ADMIN)
@@ -74,13 +74,14 @@ export class AuthController {
   @ApiBearerAuth()
   public async findAllActiveAccounts(
     @Query() query: AccountListQueryDto,
-  ): Promise<any> {
-    return await this.authService.findWithQuery(query);
+  ): Promise<BaseUserListResponseDto> {
+    const users = await this.authService.findWithQuery(query);
+    return AuthResponseMapper.toBaseResponseList(users, query);
   }
 
   @ApiTags('Account management')
   @ApiOperation({ summary: 'Ban account' })
-  @Patch('ban/:userId')
+  @Post('ban/:userId')
   @Role(RoleEnum.MANAGER, RoleEnum.ADMIN)
   @UseGuards(JwtGuard, RoleGuard)
   @ApiBearerAuth()
@@ -96,7 +97,7 @@ export class AuthController {
   @Role(RoleEnum.MANAGER, RoleEnum.ADMIN)
   @UseGuards(JwtGuard, RoleGuard)
   @ApiBearerAuth()
-  @Patch('unban/:userId')
+  @Post('unban/:userId')
   public async unbanAccount(
     @Param('userId') id: string,
   ): Promise<BaseUserAccountDto> {

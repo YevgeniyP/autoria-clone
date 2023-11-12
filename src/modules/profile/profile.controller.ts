@@ -1,7 +1,7 @@
 import { Body, Controller, Patch, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { CurrentUser } from '../../decorators/current-user.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
@@ -14,8 +14,9 @@ import { ProfileResponseMapper } from './profile-response.mapper';
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
+  @ApiOperation({ summary: 'Update user profile' })
   @ApiBearerAuth()
-  @Patch('/update')
+  @Patch()
   public async updateProfile(
     @CurrentUser('id') userId: string,
     @Body() dto: UpdateUserProfileDto,

@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
+import { IList } from '../../../common/types/list.interface';
 import { UserEntity } from '../../app-repository/entities/user.entity';
 import { UserRepository } from '../../app-repository/repositories/user.repository';
 import { AccountListQueryDto } from '../dto/request/account-list-query.dto';
@@ -42,7 +43,7 @@ export class AuthService {
 
   public async findWithQuery(
     query: AccountListQueryDto,
-  ): Promise<UserEntity[]> {
+  ): Promise<IList<UserEntity>> {
     return await this.userRepository.findWithQuery(query);
   }
 

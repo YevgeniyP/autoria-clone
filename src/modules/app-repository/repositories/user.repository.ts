@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
+import { IList } from '../../../common/types/list.interface';
 import { AccountListQueryDto } from '../../auth/dto/request/account-list-query.dto';
 import { RegisterUserDto } from '../../auth/dto/request/register-user.dto';
 import { PasswordService } from '../../auth/services/password.service';
@@ -46,7 +47,9 @@ export class UserRepository extends Repository<UserEntity> {
     });
   }
 
-  public async findWithQuery(query: AccountListQueryDto): Promise<any> {
+  public async findWithQuery(
+    query: AccountListQueryDto,
+  ): Promise<IList<UserEntity>> {
     const queryBuilder = this.createQueryBuilder('account');
 
     if (query.search) {
@@ -66,8 +69,8 @@ export class UserRepository extends Repository<UserEntity> {
       queryBuilder.andWhere('account.role = :role', { role: query.role });
     }
 
-    queryBuilder.limit(query.limit || 10);
-    queryBuilder.offset(query.offset || 0);
+    queryBuilder.limit(query.limit);
+    queryBuilder.offset((query.offset - 1) * query.limit);
 
     const [entities, total] = await queryBuilder.getManyAndCount();
     return { entities, total };

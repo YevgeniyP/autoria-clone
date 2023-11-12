@@ -4,8 +4,12 @@ import { join } from 'path';
 
 import { AppConfigService } from '../app-config/app-config.service';
 import { AuthModule } from '../auth/auth.module';
+import { BrandEntity } from './entities/brand.entity';
+import { ModelEntity } from './entities/model.entity';
 import { ProfileEntity } from './entities/profile.entity';
 import { UserEntity } from './entities/user.entity';
+import { BrandRepository } from './repositories/brand.repository';
+import { ModelRepository } from './repositories/model.repository';
 import { ProfileRepository } from './repositories/profile.repository';
 import { UserRepository } from './repositories/user.repository';
 
@@ -26,10 +30,25 @@ import { UserRepository } from './repositories/user.repository';
         autoLoadEntities: false,
       }),
     }),
-    TypeOrmModule.forFeature([UserEntity, ProfileEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      ProfileEntity,
+      BrandEntity,
+      ModelEntity,
+    ]),
     AuthModule,
   ],
-  providers: [UserRepository, ProfileRepository],
-  exports: [UserRepository, ProfileRepository],
+  providers: [
+    UserRepository,
+    ProfileRepository,
+    BrandRepository,
+    ModelRepository,
+  ],
+  exports: [
+    UserRepository,
+    ProfileRepository,
+    BrandRepository,
+    ModelRepository,
+  ],
 })
 export class AppRepositoryModule {}
