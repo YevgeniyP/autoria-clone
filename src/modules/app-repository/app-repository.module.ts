@@ -8,6 +8,7 @@ import { BrandEntity } from './entities/brand.entity';
 import { ModelEntity } from './entities/model.entity';
 import { ProfileEntity } from './entities/profile.entity';
 import { UserEntity } from './entities/user.entity';
+import { AdvertisementRepository } from './repositories/advertisement.repository';
 import { BrandRepository } from './repositories/brand.repository';
 import { ModelRepository } from './repositories/model.repository';
 import { ProfileRepository } from './repositories/profile.repository';
@@ -43,12 +44,14 @@ import { UserRepository } from './repositories/user.repository';
     ProfileRepository,
     BrandRepository,
     ModelRepository,
+    AdvertisementRepository,
   ],
   exports: [
     UserRepository,
     ProfileRepository,
     BrandRepository,
     ModelRepository,
+    AdvertisementRepository,
   ],
 })
 export class AppRepositoryModule {}

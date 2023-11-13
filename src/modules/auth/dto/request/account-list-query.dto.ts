@@ -13,7 +13,7 @@ export class AccountListQueryDto {
   @IsInt()
   @Min(1)
   @IsOptional()
-  readonly offset?: number = 1;
+  readonly offset: number = 1;
 
   @ApiPropertyOptional({
     minimum: 1,
@@ -25,7 +25,7 @@ export class AccountListQueryDto {
   @Min(1)
   @Max(50)
   @IsOptional()
-  readonly limit?: number = 10;
+  readonly limit: number = 10;
 
   @Transform(({ value }) => value.trim())
   @IsOptional()

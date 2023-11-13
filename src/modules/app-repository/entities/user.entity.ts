@@ -1,7 +1,14 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { AccountTypeEnum } from '../../auth/enum/account-type.enum';
 import { RoleEnum } from '../../auth/enum/role.enum';
+import { AdvertisementEntity } from './advertisement.entity';
 import { ProfileEntity } from './profile.entity';
 
 @Entity('user')
@@ -33,4 +40,7 @@ export class UserEntity {
 
   @OneToOne(() => ProfileEntity, (userprofile) => userprofile.user)
   profile: ProfileEntity;
+
+  @OneToMany(() => AdvertisementEntity, (advertisement) => advertisement.user)
+  advertisements: AdvertisementEntity[];
 }

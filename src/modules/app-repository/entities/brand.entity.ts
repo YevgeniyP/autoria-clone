@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+import { AdvertisementEntity } from './advertisement.entity';
 import { ModelEntity } from './model.entity';
 
 @Entity('brand')
@@ -12,4 +13,7 @@ export class BrandEntity {
 
   @OneToMany(() => ModelEntity, (model) => model.brand)
   models: ModelEntity[];
+
+  @OneToMany(() => AdvertisementEntity, (advertisement) => advertisement.brand)
+  advertisements: AdvertisementEntity[];
 }
